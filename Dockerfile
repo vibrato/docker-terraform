@@ -19,5 +19,6 @@ RUN curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terra
 FROM alpine:latest
 
 COPY --from=builder /bin/terraform /bin/terraform
+RUN apk add --update git
 
 ENTRYPOINT ["/bin/terraform"]
