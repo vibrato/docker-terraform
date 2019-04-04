@@ -16,9 +16,15 @@ RUN curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terra
     cat terraform_${TERRAFORM_VERSION}_SHA256SUMS | grep linux_amd64.zip | sha256sum -c && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
 
-FROM alpine:latest
+FROM golang:alpine
 
 COPY --from=builder /bin/terraform /bin/terraform
-RUN apk add --update git
+RUN apk add --update git curl gcc musl-dev
+
+# Install dep for golang for terratest
+RUN mkdir -p /root/go/bin
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+ENV GOPATH=/root/go
+ENV PATH=${PATH}:/root/go/bin
 
 ENTRYPOINT ["/bin/terraform"]
