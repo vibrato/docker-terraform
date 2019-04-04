@@ -5,7 +5,7 @@ RUN apk add --update git curl openssh gpgme && \
     gpg --import hashicorp.asc
 
 ARG TERRAFORM_VERSION
-ENV TERRAFORM_VERSION ${TERRAFORM_VERSION:-0.11.11}
+ENV TERRAFORM_VERSION ${TERRAFORM_VERSION:-0.11.13}
 
 LABEL TERRAFORM_VERSION=${TERRAFORM_VERSION}
 
@@ -19,5 +19,6 @@ RUN curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terra
 FROM alpine:latest
 
 COPY --from=builder /bin/terraform /bin/terraform
+RUN apk add --update git
 
 ENTRYPOINT ["/bin/terraform"]
